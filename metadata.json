@@ -1,0 +1,6 @@
+{
+  "name": "GlobeTrotter: The Lost Relic",
+  "description": "A cinematic HD-2D adventure browser game featuring hazardous tunnels, ancient symbol puzzles, high-speed vehicle pursuit, temporal fractures, and a grand sacred Indian temple reveal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,904 @@
+PROJECT: GLOBETROTTER — THE LOST RELIC
+
+Full Production-Oriented 2D Cinematic Adventure Game
+
+Act as a senior game developer, Phaser engineer, technical artist, gameplay designer, UI/UX designer, and QA engineer.
+
+Build a complete, playable browser game called GlobeTrotter: The Lost Relic using JavaScript, Phaser 3, HTML5, and WebGL.
+
+Do not merely generate a design document, static website, concept-art collage, or non-interactive demo. Build the actual game with working gameplay systems, scene transitions, controls, collision detection, collectible logic, puzzles, combat, cinematics, and a complete ending.
+
+The project must run in a browser and be maintainable enough for further development.
+
+⸻
+
+1. CREATIVE VISION
+
+GlobeTrotter is a cinematic 2D adventure game inspired by classic treasure-hunting adventures.
+
+The player controls an original explorer travelling through dangerous underground tunnels, ancient puzzle chambers, high-speed vehicle pursuits, fragments of time, enemy encounters, and a magnificent ancient Indian temple.
+
+The adventure culminates in a vast sacred chamber containing monumental golden statues of Hindu deities and a radiant artifact illuminated by a beam of sunlight.
+
+The visual reference supplied with this project is the primary art-direction benchmark.
+
+The game should convey:
+
+* Discovery and mystery
+* Ancient history and forgotten civilizations
+* Dangerous platforming and environmental hazards
+* Intelligent puzzles
+* Fast-paced action
+* Temporal mystery
+* A visually spectacular final reveal
+
+The experience should feel like a cohesive, premium indie adventure game rather than a basic school project.
+
+Visual identity
+
+Use a cinematic HD-2D presentation:
+
+* Detailed painted or illustrated environments
+* Layered parallax backgrounds
+* Strong foreground, middle-ground, and background separation
+* Warm amber, bronze, and gold lighting
+* Deep blue and teal shadow tones
+* Volumetric-light-style effects
+* Animated dust, mist, embers, and debris
+* Detailed architectural silhouettes
+* Smooth camera movement
+* Cinematic transitions
+* Consistent character proportions
+* Elegant gold typography and a dark premium interface
+
+Important: The reference image shows the intended quality, not assets that already exist. Reproduce the visual direction through actual game-ready assets, layered backgrounds, animation, shaders, particles, and composition.
+
+Do not simply draw rectangles and circles and call the result HD-2D.
+
+If the platform cannot create final-quality artwork directly, create a consistent asset pipeline, use suitable licensed assets, and use clearly identified temporary artwork only where necessary.
+
+⸻
+
+2. REQUIRED TECHNOLOGY
+
+Use the following stack:
+
+* Phaser 3 for game rendering, scenes, input, cameras, and gameplay.
+* JavaScript ES modules.
+* Vite for local development and production builds.
+* HTML5 and CSS for application structure and supplementary interface elements.
+* Phaser Arcade Physics or appropriate custom physics for gameplay.
+* WebGL rendering, with a practical fallback where possible.
+* Local asset files rather than dependencies on remote runtime image URLs.
+* LocalStorage for simple persistent progress and settings where appropriate.
+
+Do not require paid APIs, external AI services, user accounts, or a backend to play the game.
+
+The game must run after dependencies are installed and the documented development command is executed.
+
+Use a sensible logical resolution around 960 × 540 or 1280 × 720, with responsive scaling and proper aspect-ratio preservation.
+
+Do not stretch character sprites or distort background artwork to fit arbitrary screen dimensions.
+
+⸻
+
+3. GAME STRUCTURE
+
+Create a maintainable architecture. Adapt the structure where appropriate, but preserve separation of responsibilities.
+
+Suggested structure:
+
+GlobeTrotter/
+├── public/
+│   └── assets/
+│       ├── backgrounds/
+│       ├── characters/
+│       ├── animations/
+│       ├── tilesets/
+│       ├── collectibles/
+│       ├── traps/
+│       ├── enemies/
+│       ├── vehicles/
+│       ├── puzzles/
+│       ├── temple/
+│       ├── effects/
+│       ├── audio/
+│       └── fonts/
+├── src/
+│   ├── main.js
+│   ├── config.js
+│   ├── scenes/
+│   │   ├── BootScene.js
+│   │   ├── PreloadScene.js
+│   │   ├── MainMenuScene.js
+│   │   ├── IntroScene.js
+│   │   ├── TutorialScene.js
+│   │   ├── TunnelScene.js
+│   │   ├── PuzzleScene.js
+│   │   ├── ChaseScene.js
+│   │   ├── TimeFlashScene.js
+│   │   ├── CombatScene.js
+│   │   ├── GrandRevealScene.js
+│   │   ├── PauseScene.js
+│   │   └── ResultsScene.js
+│   ├── entities/
+│   │   ├── Explorer.js
+│   │   ├── Enemy.js
+│   │   ├── Projectile.js
+│   │   └── Collectible.js
+│   ├── systems/
+│   │   ├── AudioManager.js
+│   │   ├── LevelManager.js
+│   │   ├── SaveManager.js
+│   │   ├── CheckpointManager.js
+│   │   ├── LightingManager.js
+│   │   └── ParticleManager.js
+│   ├── ui/
+│   │   ├── HUD.js
+│   │   ├── PauseMenu.js
+│   │   ├── DialogueBox.js
+│   │   └── LevelCompleteUI.js
+│   ├── data/
+│   │   ├── levels.js
+│   │   └── collectibles.js
+│   └── styles/
+│       └── main.css
+├── index.html
+├── package.json
+├── vite.config.js
+└── README.md
+
+This is an architectural guide, not a demand to create empty files. Every implemented module must have a meaningful purpose.
+
+Avoid a monolithic JavaScript file containing all game logic.
+
+⸻
+
+4. MAIN MENU AND INTRODUCTION
+
+Create a premium opening screen.
+
+Main menu
+
+Include:
+
+* GLOBETROTTER logo and title.
+* Subtitle: THE LOST RELIC.
+* Tagline: BEYOND BORDERS. BEYOND TIME.
+* Begin Expedition button.
+* Continue button when saved progress exists.
+* Controls and Settings buttons.
+* Sound and music controls.
+* A cinematic ancient landscape with distant temple silhouettes.
+* Layered atmospheric backgrounds.
+* Subtle drifting particles and animated light.
+* Smooth button hover and press animations.
+* A brief cinematic transition into the game.
+
+The UI should use dark surfaces, antique gold borders, elegant typography, and a restrained color palette.
+
+Do not use generic template cards, excessive gradients, oversized rounded rectangles, or a generic AI-generated dashboard aesthetic.
+
+Intro sequence
+
+Create a short playable introduction that establishes the explorer and the mysterious expedition.
+
+Show the explorer arriving at an ancient site. Introduce a mysterious symbol or artifact clue that motivates the journey.
+
+Use camera movement, environmental sound, short dialogue or narrative captions, and a controlled transition into the tutorial.
+
+Provide a skip option for cinematic sequences.
+
+⸻
+
+5. PLAYER CHARACTER AND CONTROLS
+
+Create an original treasure-hunting explorer.
+
+The character should have a consistent silhouette, explorer clothing, a hat or other distinctive headwear, a backpack or satchel, and a readable side-view animation style.
+
+Do not use unlicensed Indiana Jones artwork or copyrighted film screenshots.
+
+Required animations
+
+Implement distinct animations for:
+
+* Idle
+* Walking
+* Running
+* Jumping
+* Falling
+* Landing
+* Crouching or sliding
+* Interacting
+* Taking damage
+* Shooting
+* Death or defeat
+* Vehicle riding, where applicable
+
+Animation changes must respond to the player’s actual state.
+
+Do not swap randomly between unrelated static images.
+
+If sprite sheets are used, validate frame dimensions, animation definitions, and asset loading.
+
+Controls
+
+Desktop:
+
+* A / D or Left / Right arrows: move.
+* Space / W / Up arrow: jump.
+* S / Down arrow: crouch or slide where supported.
+* E: interact.
+* J or mouse click: shoot during combat.
+* Escape: pause or open the pause menu.
+
+Provide an on-screen control reference.
+
+Support keyboard focus and browser resizing without breaking the game.
+
+If practical, add basic mobile touch controls for movement, jump, interaction, and shooting.
+
+⸻
+
+6. HUD AND SHARED GAME SYSTEMS
+
+Implement a consistent in-game HUD.
+
+Display:
+
+* Health or hearts.
+* Coins collected.
+* Hidden gems collected.
+* Current level name.
+* Current objective.
+* Ammunition during combat.
+* Puzzle hints when appropriate.
+* Pause button or keyboard shortcut.
+
+The interface should be legible over bright and dark backgrounds.
+
+Use subtle gold accents, clear icons, restrained animations, and consistent spacing.
+
+Implement shared systems for:
+
+* Health and damage.
+* Invulnerability after taking damage.
+* Collectibles.
+* Checkpoints.
+* Scene transitions.
+* Pause and resume.
+* Level completion.
+* Audio settings.
+* Saved progress.
+* Restarting a level.
+* Death and respawn.
+* Final game completion.
+
+The HUD must reflect actual game state. Do not hardcode decorative counters that fail to update.
+
+⸻
+
+7. LEVEL 1 — THE LONG TUNNEL
+
+Narrative
+
+The explorer enters a forgotten underground passage while searching for clues to the Lost Relic.
+
+The tunnel begins quietly, then becomes increasingly dangerous.
+
+Environment
+
+Create an ancient underground tunnel featuring:
+
+* Layered stone walls and arches.
+* Cracked masonry.
+* Torch sconces.
+* Hanging chains.
+* Foreground silhouettes.
+* Deep shadows.
+* Dust and drifting particles.
+* Amber light sources.
+* Cool shadow tones.
+* A visible sense of depth and scale.
+
+Use multiple parallax layers to make the world feel larger than a single flat background.
+
+Gameplay
+
+Implement a continuous side-scrolling platforming level.
+
+The player must:
+
+1. Learn movement and jumping.
+2. Cross gaps.
+3. Jump between platforms.
+4. Avoid floor spikes.
+5. Dodge swinging blades.
+6. Avoid falling rocks or timed hazards.
+7. Collect coins.
+8. Discover hidden blue gems.
+9. Reach checkpoints.
+10. Escape before the tunnel’s final collapse.
+
+Traps
+
+Create functioning traps, not merely decorative sprites.
+
+Each trap needs a collision area, clear visual feedback, and predictable timing.
+
+Include:
+
+* Floor spikes.
+* Swinging blades.
+* Falling rocks.
+* Collapsing platforms.
+* Timed doors or barriers.
+
+Damage should be fair and readable. Briefly flash the player or apply temporary invulnerability after a hit.
+
+Collectibles
+
+Coins should have a pickup animation, sound, and HUD update.
+
+Hidden gems should glow with a blue or cyan light and be placed in optional, discoverable locations.
+
+Collected items should not respawn immediately when the player dies and restarts from a checkpoint unless that behavior is explicitly intended.
+
+Completion
+
+The tunnel ends with a sealed exit or dramatic escape sequence.
+
+When the player reaches it, trigger a short cinematic transition into the puzzle chamber.
+
+⸻
+
+8. LEVEL 2 — THE PUZZLE CHAMBER
+
+Environment
+
+Create an elaborate ancient chamber featuring:
+
+* Stone pillars.
+* Carved symbols.
+* Weathered statues.
+* Gold ornamentation.
+* Torchlight.
+* A sealed central doorway.
+* A puzzle mechanism.
+* Glowing symbols and subtle environmental animation.
+
+Use a different visual palette from the tunnel, with cooler shadows and concentrated golden highlights.
+
+Puzzle design
+
+Implement a fully functional symbol-alignment puzzle.
+
+The chamber contains three rotatable relics or stone mechanisms.
+
+The player must inspect clues and align the symbols in the correct order.
+
+The intended solution must be deterministic and testable.
+
+Include:
+
+* An environmental clue explaining the solution.
+* Interactive relics.
+* Visible rotation or activation animations.
+* Correct and incorrect feedback.
+* A sound or visual effect when a relic locks into place.
+* A final activation mechanism.
+* A door that opens only when the puzzle is solved.
+
+Do not solve the puzzle automatically after a fixed number of button presses.
+
+Do not reveal the answer immediately without allowing the player to interact.
+
+Provide a subtle optional hint after the player has spent time attempting the puzzle.
+
+Completion
+
+After the seal opens, the player proceeds into a vehicle escape sequence.
+
+⸻
+
+9. LEVEL 3 — THE CAR CHASE
+
+Concept
+
+The explorer escapes the ruins in a vehicle while enemy vehicles pursue him through dangerous terrain.
+
+This level should feel fast, visually energetic, and distinct from normal platforming.
+
+Visual environment
+
+Include:
+
+* A winding mountain or canyon road.
+* Distant mountains.
+* Foreground rocks and vegetation.
+* Dust trails.
+* Roadside ruins.
+* Strong motion cues.
+* Dramatic sunlight and atmospheric perspective.
+
+Gameplay
+
+Create a functioning chase sequence with:
+
+* A visible player vehicle.
+* Scrolling scenery.
+* Enemy pursuit vehicles.
+* Road obstacles.
+* Rocks and debris.
+* Gaps or damaged bridge sections.
+* Jump or dodge mechanics.
+* Collision feedback.
+* Increasing difficulty.
+* A clear endpoint.
+
+The player must actively avoid hazards. Do not create a prerecorded animation that ignores player input.
+
+Use readable controls suitable for the chase.
+
+The camera and background movement should communicate speed without making hazards impossible to see.
+
+Include a short climax, such as escaping across a collapsing bridge.
+
+⸻
+
+10. TIME-TRAVEL FLASH-CUT INTERLUDE
+
+Place this sequence between the car chase and Level 4.
+
+Narrative purpose
+
+The explorer discovers that the artifact is connected to events across different eras.
+
+The interlude should raise questions rather than explain the entire mystery.
+
+Visual sequence
+
+Create a cinematic montage featuring:
+
+* An ancient civilization.
+* A forgotten royal or temple setting.
+* The present-day explorer.
+* A futuristic landscape.
+* Strange astronomical or temporal symbols.
+* A brief glimpse of the radiant artifact.
+
+Use rapid but intentional cuts, short fades, visual match cuts, subtle screen distortion, flashes of light, and synchronized audio cues.
+
+Create a distinct visual identity for past, present, and future.
+
+The sequence should last approximately 8–15 seconds, with a skip option.
+
+This is a cinematic scene rather than a full playable level.
+
+It must transition correctly into the next stage without losing the player’s persistent game state.
+
+⸻
+
+11. LEVEL 4 — THE LAST STAND
+
+Concept
+
+The explorer reaches the temple’s final defenses and must fight through hostile guards to reach the inner chamber.
+
+This is a 2D action-platforming stage.
+
+Environment
+
+Include:
+
+* Ancient stone corridors.
+* Broken pillars.
+* Torchlight.
+* Deep shadows.
+* Foreground architectural silhouettes.
+* Cover or hiding positions where practical.
+* A sealed exit.
+* Environmental effects.
+
+Combat systems
+
+Implement:
+
+* Directional aiming or firing.
+* Projectiles.
+* Ammunition.
+* Reloading or ammunition limits if appropriate.
+* Enemy health.
+* Enemy damage and defeat animations.
+* Basic enemy movement and attack behavior.
+* Collision detection between projectiles and enemies.
+* Player damage and temporary invulnerability.
+* Ammunition pickups or a clear ammunition economy.
+* Combat feedback and sound effects.
+
+Enemy behavior should be readable and fair.
+
+The player must actively shoot or avoid enemies to progress.
+
+Do not automatically eliminate enemies when the player reaches a certain coordinate.
+
+Do not make every enemy invulnerable or allow projectiles to pass through targets without effect.
+
+Use restrained muzzle flashes, projectile trails, impact particles, and camera feedback.
+
+Completion
+
+After defeating or bypassing the required enemies, the player opens the final door.
+
+A cinematic transition introduces the Grand Reveal.
+
+⸻
+
+12. LEVEL 5 — THE GRAND REVEAL
+
+This is the emotional and visual climax of the game.
+
+Prioritize art direction, atmosphere, composition, and cinematic pacing.
+
+The chamber
+
+Create an enormous sacred chamber within an ancient Indian temple.
+
+The architecture should include:
+
+* Monumental stone columns.
+* Intricate carvings.
+* Sculpted architectural details.
+* Layered temple walls.
+* A long central aisle.
+* A raised central platform.
+* A carefully composed arrangement of golden statues.
+* Atmospheric haze.
+* Floating dust.
+* Strong depth and scale.
+
+Hindu deity statues
+
+The chamber contains magnificent golden statues of Hindu deities.
+
+Depict them respectfully and with careful attention to the intended iconography. Avoid treating sacred figures as monsters, enemies, or disposable fantasy props.
+
+Use a coherent artistic style for all statues.
+
+Do not randomly combine unrelated iconographic attributes.
+
+If exact traditional iconography cannot be confidently reproduced, keep the design restrained and consult reliable visual references before creating final art.
+
+The artifact
+
+At the center of the chamber, place a unique, ancient artifact suspended above or resting on a pedestal.
+
+It should feature:
+
+* Intricate geometry.
+* Metallic gold surfaces.
+* Subtle emissive patterns.
+* Slowly rotating components where appropriate.
+* A warm, radiant core.
+* Animated light pulses.
+* Floating particles.
+* A powerful central beam of sunlight.
+
+The artifact must be the focal point of the composition.
+
+Lighting
+
+Create a convincing cinematic illusion of sunlight entering from a high opening.
+
+Use:
+
+* A concentrated golden light shaft.
+* Layered transparent light beams.
+* Atmospheric particles.
+* Soft glow and bloom.
+* Dynamic light intensity.
+* Gold highlights against deep shadows.
+* Subtle reflections or highlights on surrounding architecture.
+
+Use Phaser-compatible effects or custom shaders where practical. If full volumetric lighting is unavailable, use layered effects to achieve the intended appearance without pretending the effect is physically accurate.
+
+Cinematic reveal
+
+The sequence should unfold as follows:
+
+1. The previous scene fades to black.
+2. Footsteps echo in the darkness.
+3. A narrow beam of sunlight becomes visible.
+4. The camera moves into the chamber.
+5. The explorer enters the foreground.
+6. The camera slowly reveals the golden statues.
+7. The music rises as the central artifact becomes visible.
+8. The artifact begins to glow more intensely.
+9. The camera settles on a wide composition showing the chamber’s scale.
+10. The explorer approaches the artifact.
+11. The player can press E to interact.
+12. Interaction triggers a controlled pulse of light and a short cinematic.
+13. A final visual hint suggests that the artifact connects different eras.
+14. Display the title: GLOBETROTTER — THE LOST RELIC.
+15. Show the completion screen with replay and main-menu options.
+
+Allow the player to skip the cinematic while preserving the ending and progression logic.
+
+The final reveal should not be reduced to a static image with a text overlay.
+
+⸻
+
+13. ART AND ASSET PIPELINE
+
+The project requires actual game-ready art assets.
+
+Use a combination of:
+
+* Properly licensed free asset packs.
+* Original generated concept art.
+* Custom sprite sheets.
+* Layered environment illustrations.
+* Procedural effects.
+* Original UI assets.
+
+Keep the explorer’s appearance, proportions, colors, and animation style consistent across all scenes.
+
+Use coherent environmental art across each level.
+
+Do not mix unrelated pixel-art sprites with photorealistic backgrounds unless the contrast is a deliberate art-direction decision.
+
+For each asset, establish:
+
+* Intended use.
+* Dimensions.
+* Sprite frame dimensions when applicable.
+* Transparency requirements.
+* File format.
+* License or source.
+* Expected position and scale in the game world.
+
+Prefer local assets packaged with the project.
+
+Do not use hotlinked image URLs as the primary art pipeline.
+
+If generated images are used as backgrounds, compose them for the intended camera and gameplay layout. Platforms, hazards, and foreground objects that require collision detection should be represented as separate game objects or defined collision maps.
+
+Do not attempt to use a single flat background image as the entire playable level.
+
+Where assets are missing, implement a visually coherent temporary replacement and document it clearly.
+
+⸻
+
+14. AUDIO AND ATMOSPHERE
+
+Implement an audio system with:
+
+* Main-menu ambience.
+* Footsteps.
+* Jump and landing sounds.
+* Coin and gem collection sounds.
+* Trap sounds.
+* Puzzle interaction sounds.
+* Puzzle completion sound.
+* Engine and chase ambience.
+* Weapon and impact sounds.
+* Temple ambience.
+* Artifact activation sound.
+* Level-transition effects.
+* Background music per major sequence.
+
+Use properly licensed audio or original sounds.
+
+Provide independent music and sound-effect volume controls, plus mute.
+
+Do not use copyrighted film soundtracks or recordings without permission.
+
+Audio must stop, resume, or transition correctly when scenes change or the game is paused.
+
+⸻
+
+15. CAMERA, LIGHTING, AND EFFECTS
+
+Implement reusable systems for:
+
+* Horizontal camera following.
+* Camera dead zones or smoothing.
+* Camera bounds.
+* Parallax scrolling.
+* Screen shake with restrained intensity.
+* Scene fades.
+* Lighting and glow effects.
+* Particles.
+* Environmental animation.
+* Cinematic camera movement.
+* Damage feedback.
+* Collectible pickup feedback.
+
+Use effects purposefully. Avoid excessive bloom, constant screen shake, unreadable darkness, and particle overload.
+
+The game should remain readable during action.
+
+Ensure effects do not introduce excessive performance costs on ordinary laptops and integrated graphics.
+
+⸻
+
+16. SAVE SYSTEM AND PROGRESSION
+
+Implement local save functionality using LocalStorage.
+
+Save:
+
+* Unlocked levels.
+* Best completion status.
+* Relevant persistent collectibles or totals.
+* Audio and control settings.
+* Current checkpoint where safe and practical.
+
+The player must be able to restart a level without corrupting the entire game state.
+
+Pause and resume should work in every playable scene.
+
+Death should lead to a clear respawn or restart flow.
+
+Do not lose the player’s entire progression because one scene is restarted.
+
+If LocalStorage is unavailable, the game should remain playable for the current session.
+
+⸻
+
+17. RESPONSIVE DESIGN
+
+Support:
+
+* Desktop Chrome.
+* Desktop Edge.
+* Firefox where practical.
+* Common laptop screen sizes.
+* Smaller browser windows.
+* Basic mobile browser compatibility if feasible.
+
+Preserve the game’s aspect ratio.
+
+Do not stretch backgrounds, distort sprites, or place controls outside the visible screen.
+
+Scale the HUD carefully and maintain readable text.
+
+Keyboard controls must not accidentally scroll the browser during gameplay.
+
+When the player pauses the game or changes browser focus, prevent unintended movement and resume predictably.
+
+⸻
+
+18. TESTING AND QUALITY ASSURANCE
+
+Do not report completion based solely on the game compiling.
+
+Run the development server and production build. Test the actual gameplay flow where browser testing is available.
+
+Verify the following.
+
+Core functionality
+
+* Main menu buttons work.
+* The tutorial can be completed.
+* Player movement and jumping work.
+* Platform collisions behave correctly.
+* Traps detect collisions.
+* Damage and invulnerability work.
+* Coins and gems update the HUD.
+* Collectibles cannot be repeatedly collected by standing in one position.
+* Checkpoints and respawning work.
+* The puzzle requires a correct solution.
+* The car chase responds to player input.
+* Combat projectiles can damage enemies.
+* Ammunition and health behave correctly.
+* Every required level can be completed.
+* The final artifact can be interacted with.
+* The ending and replay options work.
+* Pause and resume work.
+* Settings persist appropriately.
+* Scene changes do not duplicate input listeners, sounds, or timers.
+
+Technical quality
+
+* No missing critical assets.
+* No uncaught runtime errors.
+* No broken scene transitions.
+* No permanently frozen game states.
+* No unintended repeated damage each frame.
+* No unbounded projectile or particle accumulation.
+* No major HUD overlap at supported resolutions.
+* No production build errors.
+* No dependence on external runtime services for essential gameplay.
+
+Fix discovered issues before declaring the game complete.
+
+If a browser test cannot be performed, state that limitation honestly.
+
+⸻
+
+19. PERFORMANCE
+
+Target a stable 60 FPS on a reasonably modern laptop where practical.
+
+Use:
+
+* Texture atlases where beneficial.
+* Appropriately sized images.
+* Efficient collision handling.
+* Particle limits.
+* Reuse of game objects where justified.
+* Clean scene shutdown and resource management.
+* Reasonable asset sizes.
+* Compressed audio and images where appropriate.
+
+Do not load every oversized image into memory without a reason.
+
+Avoid expensive per-frame operations that can be precomputed.
+
+Do not sacrifice basic gameplay readability to achieve a particular visual effect.
+
+⸻
+
+20. DEVELOPMENT STRATEGY
+
+Build the complete game through sequential, verifiable milestones.
+
+Milestone 1: Project foundation, preload flow, main menu, responsive rendering, shared HUD, and settings.
+
+Milestone 2: Explorer animations, camera movement, collisions, and Level 1.
+
+Milestone 3: Puzzle chamber and deterministic puzzle mechanics.
+
+Milestone 4: Vehicle chase.
+
+Milestone 5: Time-travel cinematic.
+
+Milestone 6: Shooting mechanics and Level 4.
+
+Milestone 7: Grand Reveal, artifact interaction, and ending.
+
+Milestone 8: Save system, audio integration, testing, performance, and final polish.
+
+After each milestone:
+
+1. Run the application.
+2. Check for errors.
+3. Test the implemented mechanics.
+4. Fix critical issues.
+5. Report the actual state of the implementation.
+6. Preserve the working code before proceeding.
+
+If the environment has a task or execution limit, prioritize a complete playable vertical slice over an unfinished collection of disconnected scenes. Continue through the milestones whenever possible.
+
+Do not claim all levels are complete if only the main menu or a single level works.
+
+⸻
+
+21. REQUIRED FINAL DELIVERABLES
+
+Provide:
+
+1. The complete project source code.
+2. A working local development setup.
+3. All required local assets, or a clear manifest for any assets that could not be bundled.
+4. A README with installation, development, build, and control instructions.
+5. A documented project architecture.
+6. A list of completed features.
+7. A list of temporary assets and remaining limitations.
+8. Build and test results based on commands and tests actually executed.
+9. Clear instructions for running the game locally.
+10. A final production build that can be hosted as a static browser application.
+
+Final acceptance criterion
+
+The deliverable must be an actual playable browser game containing the complete expedition, not merely a visually impressive menu.
+
+Every level must have its intended interaction and completion condition.
+
+The final chamber must deliver the planned cinematic reveal of the golden Hindu deity statues and the radiant artifact.
+
+Maintain a consistent visual identity throughout the experience.
+
+Begin by inspecting the available environment and establishing the project. Then implement and validate the game in the milestone order above.
