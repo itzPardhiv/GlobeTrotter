@@ -1,0 +1,308 @@
+[
+  {
+    "name": "NEW: base.obj",
+    "path": "C:\\Users\\Pardhu\\Downloads\\globetrotter_visual_pass (2)\\e57776c6-b85e-49ef-b2a4-9a1ba58a656a\\base.obj",
+    "sizeBytes": 52511403,
+    "meshes": 1,
+    "skinnedMeshes": 0,
+    "bones": 0,
+    "totalVertices": 1500000,
+    "totalTriangles": 500000,
+    "bbox": {
+      "min": [
+        -0.8991,
+        0,
+        -0.1204
+      ],
+      "max": [
+        0.9107,
+        1.1728,
+        0.1205
+      ],
+      "size": [
+        1.8098,
+        1.1728,
+        0.2409
+      ],
+      "center": [
+        0.0058,
+        0.5864,
+        0
+      ]
+    },
+    "materials": [],
+    "animations": [],
+    "rootNodes": [
+      "model (Mesh)"
+    ]
+  },
+  {
+    "name": "NEW: base_basic_pbr.glb",
+    "path": "C:\\Users\\Pardhu\\Downloads\\globetrotter_visual_pass (2)\\e57776c6-b85e-49ef-b2a4-9a1ba58a656a\\base_basic_pbr.glb",
+    "sizeBytes": 29917172,
+    "meshes": 1,
+    "skinnedMeshes": 0,
+    "bones": 0,
+    "totalVertices": 374176,
+    "totalTriangles": 500000,
+    "bbox": {
+      "min": [
+        -0.8991,
+        0,
+        -0.1204
+      ],
+      "max": [
+        0.9107,
+        1.1728,
+        0.1205
+      ],
+      "size": [
+        1.8098,
+        1.1728,
+        0.2409
+      ],
+      "center": [
+        0.0058,
+        0.5864,
+        0
+      ]
+    },
+    "materials": [
+      {
+        "name": "model",
+        "type": "MeshStandardMaterial",
+        "roughness": 1,
+        "metalness": 1,
+        "hasMap": true,
+        "hasNormalMap": true,
+        "color": "#ffffff"
+      }
+    ],
+    "animations": [],
+    "rootNodes": [
+      "model (Mesh)"
+    ]
+  },
+  {
+    "name": "NEW: base_basic_shaded.glb",
+    "path": "C:\\Users\\Pardhu\\Downloads\\globetrotter_visual_pass (2)\\e57776c6-b85e-49ef-b2a4-9a1ba58a656a\\base_basic_shaded.glb",
+    "sizeBytes": 23646400,
+    "meshes": 1,
+    "skinnedMeshes": 0,
+    "bones": 0,
+    "totalVertices": 374176,
+    "totalTriangles": 500000,
+    "bbox": {
+      "min": [
+        -0.8991,
+        0,
+        -0.1204
+      ],
+      "max": [
+        0.9107,
+        1.1728,
+        0.1205
+      ],
+      "size": [
+        1.8098,
+        1.1728,
+        0.2409
+      ],
+      "center": [
+        0.0058,
+        0.5864,
+        0
+      ]
+    },
+    "materials": [
+      {
+        "name": "model",
+        "type": "MeshStandardMaterial",
+        "roughness": 1,
+        "metalness": 0,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#000000"
+      }
+    ],
+    "animations": [],
+    "rootNodes": [
+      "model (Mesh)"
+    ]
+  },
+  {
+    "name": "EXISTING: rudhra.glb",
+    "path": "C:\\Users\\Pardhu\\Downloads\\globetrotter_visual_pass (2)\\globetrotter\\public\\assets\\characters\\rudhra.glb",
+    "sizeBytes": 195152,
+    "meshes": 58,
+    "skinnedMeshes": 0,
+    "bones": 0,
+    "totalVertices": 3378,
+    "totalTriangles": 2884,
+    "bbox": {
+      "min": [
+        -0.335,
+        0,
+        -0.326
+      ],
+      "max": [
+        0.35,
+        1.585,
+        0.346
+      ],
+      "size": [
+        0.685,
+        1.585,
+        0.672
+      ],
+      "center": [
+        0.0075,
+        0.7925,
+        0.01
+      ]
+    },
+    "materials": [
+      {
+        "name": "Mat_Rudhra_CargoPants",
+        "type": "MeshStandardMaterial",
+        "roughness": 0.82,
+        "metalness": 0.05,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#48563a"
+      },
+      {
+        "name": "Mat_Rudhra_Boots",
+        "type": "MeshStandardMaterial",
+        "roughness": 0.6,
+        "metalness": 0.15,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#362115"
+      },
+      {
+        "name": "Mat_Rudhra_Brass",
+        "type": "MeshStandardMaterial",
+        "roughness": 0.38,
+        "metalness": 0.75,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#b5893d"
+      },
+      {
+        "name": "Mat_Rudhra_Jacket",
+        "type": "MeshStandardMaterial",
+        "roughness": 0.72,
+        "metalness": 0.12,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#614126"
+      },
+      {
+        "name": "Mat_Rudhra_Shirt",
+        "type": "MeshStandardMaterial",
+        "roughness": 0.88,
+        "metalness": 0,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#cfc0a2"
+      },
+      {
+        "name": "Mat_Rudhra_Scarf",
+        "type": "MeshStandardMaterial",
+        "roughness": 0.9,
+        "metalness": 0,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#8c3426"
+      },
+      {
+        "name": "Mat_Rudhra_Skin",
+        "type": "MeshStandardMaterial",
+        "roughness": 0.65,
+        "metalness": 0.05,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#c48b5c"
+      },
+      {
+        "name": "Mat_Rudhra_Hair",
+        "type": "MeshStandardMaterial",
+        "roughness": 0.92,
+        "metalness": 0.02,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#1d140e"
+      },
+      {
+        "name": "Mat_Rudhra_Hat",
+        "type": "MeshStandardMaterial",
+        "roughness": 0.78,
+        "metalness": 0.08,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#4e331e"
+      },
+      {
+        "name": "Mat_Rudhra_HatBand",
+        "type": "MeshStandardMaterial",
+        "roughness": 0.5,
+        "metalness": 0.3,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#22160d"
+      },
+      {
+        "name": "Mat_Rudhra_Glass",
+        "type": "MeshPhysicalMaterial",
+        "roughness": 0.1,
+        "metalness": 0,
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#ffffff"
+      },
+      {
+        "name": "Mat_Rudhra_Flame",
+        "type": "MeshBasicMaterial",
+        "hasMap": false,
+        "hasNormalMap": false,
+        "color": "#ff7700"
+      }
+    ],
+    "animations": [
+      {
+        "name": "idle",
+        "duration": 2,
+        "tracks": 6
+      },
+      {
+        "name": "walk",
+        "duration": 1.2,
+        "tracks": 9
+      },
+      {
+        "name": "run",
+        "duration": 0.8,
+        "tracks": 8
+      },
+      {
+        "name": "jump",
+        "duration": 1,
+        "tracks": 8
+      },
+      {
+        "name": "crouch",
+        "duration": 1.2,
+        "tracks": 8
+      },
+      {
+        "name": "interact",
+        "duration": 1.5,
+        "tracks": 4
+      }
+    ],
+    "rootNodes": [
+      "Rudhra_Root (Object3D)"
+    ]
+  }
+]

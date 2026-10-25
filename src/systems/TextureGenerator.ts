@@ -74,95 +74,106 @@ export class TextureGenerator {
         ctx.fill();
       }
 
-      // 1. Boots & Cargo Pants (Olive Khaki as in Dr. Vance reference)
+      // 1. Boots & Cargo Pants (Rudhra: Olive Khaki field expedition wear)
       const bootL = isCrouch ? cy + 14 : 54 + (isJump ? -3 : 0);
       const bootR = isCrouch ? cy + 14 : 54 + (isJump ? -3 : 0);
 
       // Left leg
-      ctx.fillStyle = '#5c6448'; // Olive drab cargo pants
+      ctx.fillStyle = '#525a42'; // Olive drab field expedition trousers
       ctx.fillRect(cx - 7 + (legOffset * 0.5), cy + 10, 5, isCrouch ? 8 : 12);
-      ctx.fillStyle = '#4a2f18'; // Laced leather boots
+      ctx.fillStyle = '#3e2714'; // Laced leather archaeological trekking boots
       ctx.fillRect(cx - 8 + (legOffset * 0.5), bootL - 5, 7, 6);
-      ctx.fillStyle = '#2c190a';
+      ctx.fillStyle = '#221408';
       ctx.fillRect(cx - 9 + (legOffset * 0.5), bootL - 1, 9, 2);
 
       // Right leg
-      ctx.fillStyle = '#4f563d';
+      ctx.fillStyle = '#484f39';
       ctx.fillRect(cx + 2 - (legOffset * 0.5), cy + 10, 5, isCrouch ? 8 : 12);
-      ctx.fillStyle = '#4a2f18';
+      ctx.fillStyle = '#3e2714';
       ctx.fillRect(cx + 1 - (legOffset * 0.5), bootR - 5, 7, 6);
-      ctx.fillStyle = '#2c190a';
+      ctx.fillStyle = '#221408';
       ctx.fillRect(cx + 1 - (legOffset * 0.5), bootR - 1, 9, 2);
 
-      // Satchel Bag (Leather messenger satchel on hip)
-      ctx.fillStyle = '#5a3617';
+      // Satchel Bag (Archaeological field messenger satchel on hip)
+      ctx.fillStyle = '#4e2d13';
       ctx.fillRect(cx - 11, cy + 2, 7, 8);
-      ctx.strokeStyle = '#341f0c';
+      ctx.strokeStyle = '#2d1808';
       ctx.lineWidth = 1;
       ctx.strokeRect(cx - 11, cy + 2, 7, 8);
-      ctx.fillStyle = '#bfa15f'; // Brass satchel buckle
+      ctx.fillStyle = '#d4af37'; // Antique brass satchel clasp
       ctx.fillRect(cx - 8, cy + 5, 2, 2);
 
-      // 2. Leather Jacket & Shirt
-      ctx.fillStyle = '#5c391e'; // Weathered brown leather jacket
+      // 2. Rugged Expedition Vest & Field Tunic
+      ctx.fillStyle = '#483928'; // Weathered brown expedition field vest
       ctx.beginPath();
       ctx.roundRect(cx - 8, cy - 6, 16, 17, 3);
       ctx.fill();
 
-      // Cream expedition shirt
-      ctx.fillStyle = '#e6dbc9';
+      // Earthy khaki rolled-sleeve tunic
+      ctx.fillStyle = '#d6c7b0';
       ctx.fillRect(cx - 3, cy - 6, 6, 8);
 
-      // Signature Red Neckerchief Scarf (Dr. Vance)
-      ctx.fillStyle = '#b91c1c'; // Vibrant crimson neckerchief
+      // Rudhra's woven archaeological amulet cord
+      ctx.strokeStyle = '#8b6528';
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(cx - 4, cy - 6);
-      ctx.lineTo(cx + 4, cy - 6);
-      ctx.lineTo(cx, cy - 1);
-      ctx.closePath();
-      ctx.fill();
+      ctx.arc(cx, cy - 4, 3, 0, Math.PI);
+      ctx.stroke();
 
-      // Leather bandolier diagonal strap
-      ctx.strokeStyle = '#341f0c';
+      // Leather bandolier diagonal utility strap
+      ctx.strokeStyle = '#2d1909';
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(cx - 7, cy - 5);
       ctx.lineTo(cx + 5, cy + 8);
       ctx.stroke();
 
-      // Belt with brass buckle
-      ctx.fillStyle = '#2a1a0f';
+      // Belt with antique brass buckle
+      ctx.fillStyle = '#24160c';
       ctx.fillRect(cx - 8, cy + 8, 16, 3);
       ctx.fillStyle = '#d4af37';
       ctx.fillRect(cx - 2, cy + 8, 4, 3);
 
-      // 3. Head & Rugged Face
-      ctx.fillStyle = isHurt ? '#ff9999' : '#e2b38e'; // Skin tone
+      // 3. Head & Rugged Face (Rudhra: Original Indian Treasure Hunter)
+      ctx.fillStyle = isHurt ? '#ff9999' : '#bd8654'; // Warm Indian skin tone
       ctx.beginPath();
       ctx.arc(cx, cy - 12, 7, 0, Math.PI * 2);
       ctx.fill();
 
-      // Dark brown wavy hair & beard stubble
-      ctx.fillStyle = '#3a2517';
-      ctx.fillRect(cx - 7, cy - 15, 4, 7); // Hair sideburns
-      ctx.fillStyle = '#946d51';
-      ctx.fillRect(cx + 1, cy - 9, 4, 3); // Stubble jawline
-      ctx.fillStyle = '#1c1108';
-      ctx.fillRect(cx + 2, cy - 13, 2, 2); // Eye
+      // Dark trimmed beard & rugged jawline
+      ctx.fillStyle = '#1c130b';
+      // Chin and jaw beard
+      ctx.beginPath();
+      ctx.arc(cx, cy - 10, 6.5, 0.2 * Math.PI, 0.8 * Math.PI);
+      ctx.fill();
+      ctx.fillRect(cx - 5, cy - 11, 3, 4); // Sideburn
+      ctx.fillRect(cx + 1, cy - 9, 4, 2);  // Stubble mustache
+      // Dark focused eye & brow
+      ctx.fillStyle = '#0f0905';
+      ctx.fillRect(cx + 1, cy - 14, 3, 1.5); // Brow
+      ctx.fillRect(cx + 2, cy - 13, 2, 2);   // Eye
 
-      // 4. Fedora Hat (Dr. Vance's signature crown & curved wide brim)
-      ctx.fillStyle = '#3f2818'; // Dark felt fedora
+      // 4. Rudhra's Long Wavy Hair (Original Indian Treasure Hunter)
+      // Long dark wavy hair flowing over nape and shoulders
+      ctx.fillStyle = '#170f08';
+      // Forehead fringe & wave
       ctx.beginPath();
-      ctx.roundRect(cx - 7, cy - 24, 14, 8, [3, 3, 0, 0]);
+      ctx.ellipse(cx - 2, cy - 17, 6, 4, -0.2, 0, Math.PI * 2);
       ctx.fill();
-      // Black ribbon band
-      ctx.fillStyle = '#18120c';
-      ctx.fillRect(cx - 7, cy - 18, 14, 2);
-      // Wide Brim
-      ctx.fillStyle = '#341f12';
+      // Flowing wavy hair volume behind head and shoulders
       ctx.beginPath();
-      ctx.ellipse(cx, cy - 16, 13, 3.5, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx - 6, cy - 13, 5, 7, 0.3, 0, Math.PI * 2);
       ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx - 7, cy - 7, 4, 6, 0.1, 0, Math.PI * 2);
+      ctx.fill();
+      // Wavy locks highlight
+      ctx.fillStyle = '#2e1e12';
+      ctx.fillRect(cx - 5, cy - 16, 2, 4);
+      ctx.fillRect(cx - 8, cy - 11, 2, 5);
+      // Archaeological leather hair-tie band
+      ctx.fillStyle = '#7a5223';
+      ctx.fillRect(cx - 7, cy - 14, 3, 2);
 
       // 5. Signature Brass Lantern (Held in hand or swinging)
       const lanternX = cx + 8 + (isShoot ? 12 : 0);

@@ -13,6 +13,13 @@ export interface GameProgress {
   musicVolume: number;
   sfxVolume: number;
   hasSeenIntro: boolean;
+  // Gamification & Discovery extensions
+  totalXp: number;
+  awardedEventIds: string[];
+  collectedRelicIds: string[];
+  unlockedJournalIds: string[];
+  unlockedAchievements: string[];
+  levelRatings: Record<number, { stars: number; score: number; xp: number }>;
 }
 
 const STORAGE_KEY = 'globetrotter_save_v1';
@@ -28,6 +35,12 @@ function createDefaultSave(): GameProgress {
     musicVolume: 0.6,
     sfxVolume: 0.7,
     hasSeenIntro: false,
+    totalXp: 0,
+    awardedEventIds: [],
+    collectedRelicIds: [],
+    unlockedJournalIds: [],
+    unlockedAchievements: [],
+    levelRatings: {},
   };
 }
 
@@ -82,6 +95,12 @@ export class SaveManager {
             musicVolume: finiteNumber(raw.musicVolume, defaults.musicVolume, 0, 1),
             sfxVolume: finiteNumber(raw.sfxVolume, defaults.sfxVolume, 0, 1),
             hasSeenIntro: typeof raw.hasSeenIntro === 'boolean' ? raw.hasSeenIntro : defaults.hasSeenIntro,
+            totalXp: Math.floor(finiteNumber(raw.totalXp, defaults.totalXp, 0, Number.MAX_SAFE_INTEGER)),
+            awardedEventIds: Array.isArray(raw.awardedEventIds) ? raw.awardedEventIds.filter((x): x is string => typeof x === 'string') : [],
+            collectedRelicIds: Array.isArray(raw.collectedRelicIds) ? raw.collectedRelicIds.filter((x): x is string => typeof x === 'string') : [],
+            unlockedJournalIds: Array.isArray(raw.unlockedJournalIds) ? raw.unlockedJournalIds.filter((x): x is string => typeof x === 'string') : [],
+            unlockedAchievements: Array.isArray(raw.unlockedAchievements) ? raw.unlockedAchievements.filter((x): x is string => typeof x === 'string') : [],
+            levelRatings: raw.levelRatings && typeof raw.levelRatings === 'object' && !Array.isArray(raw.levelRatings) ? (raw.levelRatings as Record<number, { stars: number; score: number; xp: number }>) : {},
           };
         }
       }
@@ -126,6 +145,82 @@ export class SaveManager {
       this.data.highScores[levelNum] = score;
     }
     this.save();
+  }
+
+  public awardXP(eventId: string, amount: number): boolean {
+    if (!this.data.awardedEventIds) this.data.awardedEventIds = [];
+    if (this.data.awardedEventIds.includes(eventId)) {
+      return false; // Prevent duplicate award
+    }
+    this.data.awardedEventIds.push(eventId);
+    this.data.totalXp = (this.data.totalXp || 0) + amount;
+    this.save();
+    return true;
+  }
+
+  public awardEvent(eventId: string): boolean {
+    if (!this.data.awardedEventIds) this.data.awardedEventIds = [];
+    if (this.data.awardedEventIds.includes(eventId)) {
+      return false;
+    }
+    this.data.awardedEventIds.push(eventId);
+    this.save();
+    return true;
+  }
+
+  public isEventAwarded(eventId: string): boolean {
+    return this.data.awardedEventIds ? this.data.awardedEventIds.includes(eventId) : false;
+  }
+
+  public collectRelic(relicId: string): boolean {
+    if (!this.data.collectedRelicIds) this.data.collectedRelicIds = [];
+    if (this.data.collectedRelicIds.includes(relicId)) {
+      return false;
+    }
+    this.data.collectedRelicIds.push(relicId);
+    this.save();
+    return true;
+  }
+
+  public hasRelic(relicId: string): boolean {
+    return this.data.collectedRelicIds ? this.data.collectedRelicIds.includes(relicId) : false;
+  }
+
+  public unlockJournal(journalId: string): boolean {
+    if (!this.data.unlockedJournalIds) this.data.unlockedJournalIds = [];
+    if (this.data.unlockedJournalIds.includes(journalId)) {
+      return false;
+    }
+    this.data.unlockedJournalIds.push(journalId);
+    this.save();
+    return true;
+  }
+
+  public isJournalUnlocked(journalId: string): boolean {
+    return this.data.unlockedJournalIds ? this.data.unlockedJournalIds.includes(journalId) : false;
+  }
+
+  public unlockAchievement(achId: string): boolean {
+    if (!this.data.unlockedAchievements) this.data.unlockedAchievements = [];
+    if (this.data.unlockedAchievements.includes(achId)) {
+      return false;
+    }
+    this.data.unlockedAchievements.push(achId);
+    this.save();
+    return true;
+  }
+
+  public isAchievementUnlocked(achId: string): boolean {
+    return this.data.unlockedAchievements ? this.data.unlockedAchievements.includes(achId) : false;
+  }
+
+  public setLevelRating(levelNum: number, rating: { stars: number; score: number; xp: number }) {
+    if (!this.data.levelRatings) this.data.levelRatings = {};
+    const existing = this.data.levelRatings[levelNum];
+    if (!existing || rating.stars > existing.stars || (rating.stars === existing.stars && rating.score > existing.score)) {
+      this.data.levelRatings[levelNum] = rating;
+    }
+    this.setLevelComplete(levelNum, rating.score, rating.stars);
   }
 
   public updateAudioSettings(muted: boolean, musicVol: number, sfxVol: number) {

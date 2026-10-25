@@ -15,6 +15,11 @@ export class BootScene extends Phaser.Scene {
   }
 
   public preload() {
+    // Preload coordinated background artwork layers
+    this.load.image('bg_tunnel_far', '/assets/bg_tunnel_far.png?v=2');
+    this.load.image('bg_tunnel_mid', '/assets/bg_tunnel_mid.png?v=2');
+    this.load.image('bg_tunnel_ceiling', '/assets/bg_tunnel_ceiling.png?v=2');
+
     // Preload the user's uploaded authentic modular Hindu temple architecture assets
     this.load.image('asset_platform_long', '/assets/aistudio/platform_long_01_8d7371b5.png');
     this.load.image('asset_platform_short', '/assets/aistudio/platform_short_01_acd7daba.png');

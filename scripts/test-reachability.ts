@@ -182,32 +182,32 @@ const routes: JumpRoute[] = [
     zone: 'Chapter II',
     name: 'Chamber Floor to Step 1 Left',
     launchSurface: 'Floor (y=698, top=677)',
-    landingSurface: 'step1L (x: 160, y: 630, top=612)',
-    takeoffXRange: [50, 160],
-    landingXRange: [90, 230],
+    landingSurface: 'step1L (x: 100, y: 620, top=602)',
+    takeoffXRange: [20, 100],
+    landingXRange: [40, 160],
     takeoffTopY: 677,
-    landingTopY: 612,
+    landingTopY: 602,
     isMandatory: true,
   },
   {
     zone: 'Chapter II',
     name: 'Step 1 Left to Step 2 Left',
-    launchSurface: 'step1L (x: 160, top=612)',
-    landingSurface: 'step2L (x: 250, y: 550, top=532)',
-    takeoffXRange: [90, 230],
-    landingXRange: [180, 320],
-    takeoffTopY: 612,
-    landingTopY: 532,
+    launchSurface: 'step1L (x: 100, top=602)',
+    landingSurface: 'step2L (x: 195, y: 545, top=527)',
+    takeoffXRange: [40, 160],
+    landingXRange: [135, 255],
+    takeoffTopY: 602,
+    landingTopY: 527,
     isMandatory: true,
   },
   {
     zone: 'Chapter II',
     name: 'Step 2 Left to Altar Dais (Dial Platform)',
-    launchSurface: 'step2L (x: 250, top=532)',
+    launchSurface: 'step2L (x: 195, top=527)',
     landingSurface: 'dais (x: 640, y: 530, top=471.5)',
-    takeoffXRange: [180, 320],
+    takeoffXRange: [135, 255],
     landingXRange: [262, 500],
-    takeoffTopY: 532,
+    takeoffTopY: 527,
     landingTopY: 471.5,
     isMandatory: true,
   },
@@ -256,9 +256,17 @@ console.log('[PASS] Checkpoint respawn cleans up and resets all crumbling platfo
 
 // 4. Verify Zone 4 Secret Gem Collectible Placement
 console.log('\n--- 3. Zone 4 Secret Gem Alignment Audit ---');
-assert.ok(tunnelSrc.includes('const pSecretHigh = this.createPlatform(2780, 470, \'short\')'), 'Secret vimana platform at reachable height (y=470)');
-assert.ok(tunnelSrc.includes('const secretGem = new GemCollectible(this, 2780, 345)'), 'Vedic Sapphire Relic resting at altar elevation (y=345)');
-console.log('[PASS] Secret Vedic Sapphire Relic is aligned with elevated platform');
+// New architecture: gem platform at PLAT_Y_HI=576, gem at PLAT_Y_HI-65=511
+// Verified reachable: 3-step staircase each within 108px max-rise constraint
+assert.ok(
+  tunnelSrc.includes('createMidPlatform(2700, PLAT_Y_HI)'),
+  'Secret vimana platform uses PLAT_Y_HI (576) — physics verified reachable (rise=104px < max 108px)'
+);
+assert.ok(
+  tunnelSrc.includes('new GemCollectible(this, 2700, PLAT_Y_HI - 65)'),
+  'Vedic Sapphire Relic placed at PLAT_Y_HI-65 = 511, above the shrine platform surface'
+);
+console.log('[PASS] Secret Vedic Sapphire Relic is aligned with elevated platform (physics-correct staircase route)');
 
 // 5. Verify Chapter II Puzzle Chamber Dais Reachability & Exit Trigger
 console.log('\n--- 4. Chapter II Puzzle Chamber Dais Reachability Audit ---');

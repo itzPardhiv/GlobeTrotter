@@ -119,18 +119,26 @@ const timeFlashSrc = fs.readFileSync(path.resolve(process.cwd(), 'src/scenes/Tim
 const combatSrc = fs.readFileSync(path.resolve(process.cwd(), 'src/scenes/CombatScene.ts'), 'utf-8');
 const grandRevealSrc = fs.readFileSync(path.resolve(process.cwd(), 'src/scenes/GrandRevealScene.ts'), 'utf-8');
 
+const chaseSrc = fs.readFileSync(path.resolve(process.cwd(), 'src/scenes/ChaseScene.ts'), 'utf-8');
+const resultsSrc = fs.readFileSync(path.resolve(process.cwd(), 'src/scenes/ResultsScene.ts'), 'utf-8');
+
 assert.ok(mainMenuSrc.includes('if (this.isModalOpen || this.isStarting) return;'), 'MainMenuScene guards startExpedition against rapid spam');
 assert.ok(mainMenuSrc.includes('if (this.isStarting) return;'), 'MainMenuScene guards chapter select launch against duplicate clicks');
 assert.ok(puzzleSrc.includes('if (this.hasProceeded) return;'), 'PuzzleScene guards proceedToCarChase against duplicate calls');
 assert.ok(puzzleSrc.includes('if (dial.isRotating || this.isPuzzleSolved) return;'), 'PuzzleScene guards rotateDial against rapid click spam during rotation');
+assert.ok(chaseSrc.includes('if (this.hasTriggeredClimax || this.isGameOver) return;'), 'ChaseScene guards handlePlayerHit against hits during climax or gameover');
+assert.ok(chaseSrc.includes('if (this.isGameOver) return;'), 'ChaseScene guards chaseGameOver against duplicate execution');
 assert.ok(timeFlashSrc.includes('if (this.hasFinished) return;'), 'TimeFlashScene guards showNextEra against timer race when skipping');
 assert.ok(combatSrc.includes('if (this.hasProceeded) return;'), 'CombatScene guards proceedToGrandReveal against multiple triggers');
 assert.ok(grandRevealSrc.includes('if (this.isRelicClaimed) return;'), 'GrandRevealScene guards claimArtifact against duplicate claims');
+assert.ok(resultsSrc.includes('if (this.isTransitioning) return;'), 'ResultsScene guards Play Again and Main Menu buttons against duplicate transitions');
 
 console.log('[PASS] MainMenuScene deduplicates start & launch buttons');
 console.log('[PASS] PuzzleScene deduplicates dial clicks and exit portal triggers');
+console.log('[PASS] ChaseScene deduplicates gameover and protects bridge climax');
 console.log('[PASS] TimeFlashScene cancels delayed montage timer on skip');
 console.log('[PASS] CombatScene and GrandRevealScene guard single-execution transitions');
+console.log('[PASS] ResultsScene deduplicates replay and menu transitions');
 
 // -----------------------------------------------------------------------------
 // Test 4: Scene Event Listener Leak & Re-Entry Safety

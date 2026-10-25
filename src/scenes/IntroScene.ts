@@ -84,7 +84,7 @@ export class IntroScene extends Phaser.Scene {
     narrativeBox.setAlpha(0);
 
     const boxBg = this.add.rectangle(0, 0, 740, 165, 0x0c111c, 0.94).setStrokeStyle(2, 0xd4af37);
-    const dateText = this.add.text(-330, -56, 'SUBTERRANEAN MANDAPAS — THE SUNKEN THRESHOLD · 1928', {
+    const dateText = this.add.text(-330, -56, 'ANCIENT RUINS OF VARANASI · THE SUNKEN THRESHOLD', {
       fontFamily: 'Cinzel, serif',
       fontSize: '13px',
       color: '#d4af37',
@@ -92,9 +92,9 @@ export class IntroScene extends Phaser.Scene {
     });
 
     const bodyText = this.add.text(-330, -25,
-      '"Following a weathered Sanskrit copper inscription, Dr. Harrison Vance penetrates\n' +
-      'the forgotten rock-cut mandapas of a monumental Hindu civilization.\n' +
-      'Ahead lies the Sunken Tunnel — guarded by ancient trials, chasms, and the Surya Seal."',
+      '"During an archaeological expedition near ancient ruins connected to Varanasi, Rudhra\n' +
+      'discovers a forgotten entrance and whispers of a powerful celestial artifact.\n' +
+      'Ahead lies the Sunken Passage — guarded by darkness, ancient trials, and the Surya Seal."',
       {
         fontFamily: 'Rajdhani, sans-serif',
         fontSize: '17px',

@@ -43,3 +43,56 @@ export function hasReachedPitBottom(
 export function isWithinGateRange(playerX: number, gateX: number): boolean {
   return Math.abs(playerX - gateX) < GATE_INTERACTION_RANGE;
 }
+
+// ─── Gamification & Mastery Rules ───────────────────────────────────────────
+export const REWARD_CONFIG = {
+  LOCATION_DISCOVERY: 25,
+  HIDDEN_ROUTE: 20,
+  INSPECT_INSCRIPTION: 15,
+  SOLVE_PUZZLE: 40,
+  TRAVERSAL_CHALLENGE: 25,
+  RECOVER_RELIC: 50,
+  SECRET_CHAMBER: 40,
+  LEVEL_COMPLETE: 100,
+  NO_DEATH_BONUS: 50,
+} as const;
+
+export interface LevelRatingResult {
+  score: number;
+  stars: number;
+  p: number;
+  d: number;
+  m: number;
+}
+
+/**
+ * 3-Star Rating Scoring Model:
+ * S = 0.40 * P + 0.30 * D + 0.30 * M
+ * D = 100 if N=0 else 100 * (discoveries / N)
+ * M = 100 if no challenges else 100 * (challenges / total)
+ * One star: level completed
+ * Two stars: level completed with S >= 60
+ * Three stars: level completed with S >= 85
+ */
+export function calculateStarRating(
+  p: number,
+  dCollected: number,
+  dTotal: number,
+  mCompleted: number,
+  mTotal: number,
+): LevelRatingResult {
+  const pScore = Math.max(0, Math.min(100, p));
+  const dScore = dTotal <= 0 ? 100 : Math.max(0, Math.min(100, (100 * dCollected) / dTotal));
+  const mScore = mTotal <= 0 ? 100 : Math.max(0, Math.min(100, (100 * mCompleted) / mTotal));
+  const s = Math.round((0.40 * pScore + 0.30 * dScore + 0.30 * mScore) * 100) / 100;
+
+  let stars = 1; // Completed level always receives at least one star
+  if (s >= 85) {
+    stars = 3;
+  } else if (s >= 60) {
+    stars = 2;
+  }
+
+  return { score: s, stars, p: pScore, d: dScore, m: mScore };
+}
+

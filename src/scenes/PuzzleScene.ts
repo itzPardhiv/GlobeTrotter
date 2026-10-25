@@ -97,18 +97,19 @@ export class PuzzleScene extends Phaser.Scene {
 
     // Stepped stone platforms to ascend to altar dais (eliminating softlock)
     // Left steps ascending from floor (y=677) to dais (y=471.5)
-    const step1L = this.platforms.create(160, 630, 'asset_platform_short');
-    step1L.setDisplaySize(140, 36).refreshBody();
+    // Positioned outside dais boundary (dais x: 262 to 1018) for clear vertical headroom
+    const step1L = this.platforms.create(100, 620, 'asset_platform_short');
+    step1L.setDisplaySize(120, 36).refreshBody();
 
-    const step2L = this.platforms.create(250, 550, 'asset_platform_short');
-    step2L.setDisplaySize(140, 36).refreshBody();
+    const step2L = this.platforms.create(195, 545, 'asset_platform_short');
+    step2L.setDisplaySize(120, 36).refreshBody();
 
     // Right steps (symmetrical access)
-    const step2R = this.platforms.create(w - 250, 550, 'asset_platform_short');
-    step2R.setDisplaySize(140, 36).refreshBody();
+    const step2R = this.platforms.create(w - 195, 545, 'asset_platform_short');
+    step2R.setDisplaySize(120, 36).refreshBody();
 
-    const step1R = this.platforms.create(w - 160, 630, 'asset_platform_short');
-    step1R.setDisplaySize(140, 36).refreshBody();
+    const step1R = this.platforms.create(w - 100, 620, 'asset_platform_short');
+    step1R.setDisplaySize(120, 36).refreshBody();
 
     // 4. Wall Clue Tablet on left wall
     const tablet = this.add.image(200, 420, 'puzzle_clue_tablet').setScale(0.9);

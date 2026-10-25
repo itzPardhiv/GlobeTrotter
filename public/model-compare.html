@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlobeTrotter: 3D Character Model Inspector & Comparison</title>
+  <style>
+    body {
+      margin: 0;
+      background: #11141b;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+    }
+    #ui {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 100;
+      background: rgba(13, 17, 23, 0.92);
+      border: 1px solid #30363d;
+      padding: 16px 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      max-width: 440px;
+    }
+    h1 {
+      font-size: 16px;
+      margin: 0 0 12px 0;
+      color: #f0883e;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    button {
+      background: #21262d;
+      color: #c9d1d9;
+      border: 1px solid #363b42;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    button:hover {
+      background: #30363d;
+      border-color: #8b949e;
+    }
+    button.active {
+      background: #f0883e;
+      color: #0d1117;
+      border-color: #f0883e;
+    }
+    #meta {
+      background: rgba(0,0,0,0.4);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      line-height: 1.6;
+      border: 1px solid #21262d;
+    }
+    #loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20px;
+      font-weight: bold;
+      color: #f0883e;
+      display: none;
+      z-index: 50;
+      background: rgba(0,0,0,0.85);
+      padding: 18px 28px;
+      border-radius: 8px;
+      border: 1px solid #f0883e;
+    }
+    #views {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: rgba(13, 17, 23, 0.88);
+      border: 1px solid #30363d;
+      padding: 8px 16px;
+      border-radius: 30px;
+      display: flex;
+      gap: 8px;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="ui">
+    <h1>Model Comparison Inspector</h1>
+    <div style="font-size: 12px; margin-bottom: 6px; color: #8b949e;">Select Model to Inspect:</div>
+    <div class="btn-row">
+      <button id="btn-pbr" class="active">NEW: base_basic_pbr.glb</button>
+      <button id="btn-shaded">NEW: base_basic_shaded.glb</button>
+      <button id="btn-existing">EXISTING: rudhra.glb</button>
+      <button id="btn-sidebyside">Side-by-Side Comparison</button>
+    </div>
+
+    <div style="font-size: 12px; margin-bottom: 6px; color: #8b949e;">Lineup Isolation (New Models):</div>
+    <div class="btn-row">
+      <button id="btn-isolate-hero" class="active">Hero Figure Only (Cropped)</button>
+      <button id="btn-all-figures">All 5 Figures (Raw Lineup)</button>
+    </div>
+
+    <div style="font-size: 12px; margin-bottom: 6px; color: #8b949e;">Lighting Mode:</div>
+    <div class="btn-row">
+      <button id="btn-neutral" class="active">Studio Neutral</button>
+      <button id="btn-ingame">Temple Lantern & Sunbeam</button>
+      <button id="btn-wireframe">Wireframe</button>
+    </div>
+
+    <div id="meta">Loading metadata...</div>
+  </div>
+
+  <div id="views">
+    <button id="v-front">Front (0°)</button>
+    <button id="v-side">Profile (90°)</button>
+    <button id="v-back">Rear (180°)</button>
+    <button id="v-34" class="active">3/4 View</button>
+  </div>
+
+  <div id="loading">Loading 3D Model...</div>
+
+  <script type="module">
+    import * as THREE from '/node_modules/three/build/three.module.js';
+    import { GLTFLoader } from '/node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+    import { OrbitControls } from '/node_modules/three/examples/jsm/controls/OrbitControls.js';
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x161a22);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 1.2, 3.2);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.target.set(0, 0.9, 0);
+
+    // Studio Lighting
+    const studioLights = new THREE.Group();
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
+    studioLights.add(hemi);
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
+    keyLight.position.set(2, 4, 3);
+    keyLight.castShadow = true;
+    studioLights.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0xaaccff, 0.8);
+    fillLight.position.set(-3, 2, 2);
+    studioLights.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xffeedd, 1.5);
+    rimLight.position.set(0, 3, -3);
+    studioLights.add(rimLight);
+    scene.add(studioLights);
+
+    // Temple Lighting Group
+    const templeLights = new THREE.Group();
+    templeLights.visible = false;
+    const templeHemi = new THREE.HemisphereLight(0x0a1420, 0x05080e, 0.15);
+    templeLights.add(templeHemi);
+
+    const lantern = new THREE.PointLight(0xff9933, 4.0, 10, 1.5);
+    lantern.position.set(0.4, 0.85, 0.4);
+    templeLights.add(lantern);
+
+    const sunbeam = new THREE.DirectionalLight(0x4fc3f7, 2.5);
+    sunbeam.position.set(3, 8, 2);
+    templeLights.add(sunbeam);
+    scene.add(templeLights);
+
+    // Grid Floor
+    const grid = new THREE.GridHelper(10, 20, 0xf0883e, 0x30363d);
+    grid.position.y = 0;
+    scene.add(grid);
+
+    const loader = new GLTFLoader();
+    const loadedModels = {};
+    let currentModelGroup = new THREE.Group();
+    scene.add(currentModelGroup);
+
+    const loadingEl = document.getElementById('loading');
+    const metaEl = document.getElementById('meta');
+
+    const modelDefs = {
+      pbr: {
+        url: '/new_models/base_basic_pbr.glb',
+        name: 'NEW: base_basic_pbr.glb',
+        size: '28.53 MB',
+      },
+      shaded: {
+        url: '/new_models/base_basic_shaded.glb',
+        name: 'NEW: base_basic_shaded.glb',
+        size: '22.55 MB',
+      },
+      existing: {
+        url: '/assets/characters/rudhra.glb',
+        name: 'EXISTING: rudhra.glb',
+        size: '0.19 MB',
+      }
+    };
+
+    let activeKey = 'pbr';
+    let isSideBySide = false;
+    let isWireframe = false;
+
+    async function loadModel(key) {
+      if (loadedModels[key]) return loadedModels[key];
+      loadingEl.style.display = 'block';
+      loadingEl.textContent = `Loading ${modelDefs[key].name}...`;
+
+      return new Promise((resolve, reject) => {
+        loader.load(
+          modelDefs[key].url,
+          (gltf) => {
+            loadingEl.style.display = 'none';
+            loadedModels[key] = gltf;
+            resolve(gltf);
+          },
+          (xhr) => {
+            const pct = Math.round((xhr.loaded / xhr.total) * 100);
+            loadingEl.textContent = `Loading ${modelDefs[key].name} (${pct}%)...`;
+          },
+          (err) => {
+            loadingEl.style.display = 'none';
+            reject(err);
+          }
+        );
+      });
+    }
+
+    let isolateHero = false;
+
+    function extractHeroGeometry(originalGeom) {
+      const pos = originalGeom.getAttribute('position');
+      const normal = originalGeom.getAttribute('normal');
+      const uv = originalGeom.getAttribute('uv');
+      const index = originalGeom.getIndex();
+      if (!index) return originalGeom;
+
+      const newPos = [];
+      const newNorm = [];
+      const newUv = [];
+      const newIndex = [];
+      const vertMap = new Map();
+
+      for (let t = 0; t < index.count; t += 3) {
+        const i0 = index.getX(t);
+        const i1 = index.getX(t + 1);
+        const i2 = index.getX(t + 2);
+
+        const x0 = pos.getX(i0);
+        const x1 = pos.getX(i1);
+        const x2 = pos.getX(i2);
+
+        if (x0 <= -0.34 && x1 <= -0.34 && x2 <= -0.34) {
+          const getNewIdx = (oldIdx) => {
+            if (vertMap.has(oldIdx)) return vertMap.get(oldIdx);
+            const nextIdx = newPos.length / 3;
+            newPos.push(pos.getX(oldIdx), pos.getY(oldIdx), pos.getZ(oldIdx));
+            if (normal) newNorm.push(normal.getX(oldIdx), normal.getY(oldIdx), normal.getZ(oldIdx));
+            if (uv) newUv.push(uv.getX(oldIdx), uv.getY(oldIdx));
+            vertMap.set(oldIdx, nextIdx);
+            return nextIdx;
+          };
+          newIndex.push(getNewIdx(i0), getNewIdx(i1), getNewIdx(i2));
+        }
+      }
+
+      const subGeom = new THREE.BufferGeometry();
+      subGeom.setAttribute('position', new THREE.Float32BufferAttribute(newPos, 3));
+      if (normal) subGeom.setAttribute('normal', new THREE.Float32BufferAttribute(newNorm, 3));
+      if (uv) subGeom.setAttribute('uv', new THREE.Float32BufferAttribute(newUv, 2));
+      subGeom.setIndex(newIndex);
+      return subGeom;
+    }
+
+    async function displayModel(key) {
+      isSideBySide = false;
+      activeKey = key;
+      while (currentModelGroup.children.length > 0) {
+        currentModelGroup.remove(currentModelGroup.children[0]);
+      }
+
+      const gltf = await loadModel(key);
+      const clone = gltf.scene.clone();
+
+      if (isolateHero && (key === 'pbr' || key === 'shaded')) {
+        clone.traverse((c) => {
+          if (c.isMesh && c.geometry) {
+            c.geometry = extractHeroGeometry(c.geometry);
+          }
+        });
+      }
+
+      // Inspect bounding box & normalize position
+      const bbox = new THREE.Box3().setFromObject(clone);
+      const size = new THREE.Vector3();
+      bbox.getSize(size);
+      const center = new THREE.Vector3();
+      bbox.getCenter(center);
+
+      // Align feet with ground (Y=0) and center on X/Z
+      clone.position.x = -center.x;
+      clone.position.y = -bbox.min.y;
+      clone.position.z = -center.z;
+
+      currentModelGroup.add(clone);
+
+      controls.target.set(0, size.y * 0.55, 0);
+      setCameraAngle(Math.PI / 5, Math.PI / 2.3, Math.max(size.y * 2.0, 1.8));
+
+      // Count vertices, triangles, and materials
+      let verts = 0;
+      let tris = 0;
+      let meshes = 0;
+      const mats = new Set();
+
+      clone.traverse((c) => {
+        if (c.isMesh) {
+          meshes++;
+          const pos = c.geometry.getAttribute('position');
+          if (pos) verts += pos.count;
+          if (c.geometry.index) tris += c.geometry.index.count / 3;
+          else if (pos) tris += pos.count / 3;
+          if (c.material) {
+            const mList = Array.isArray(c.material) ? c.material : [c.material];
+            mList.forEach((m) => mats.add(m.name || m.type));
+          }
+        }
+      });
+
+      metaEl.innerHTML = `
+        <strong>${modelDefs[key].name}</strong> ${isolateHero ? '<span style=\"color:#f0883e\">[Hero Isolated]</span>' : '[All 5 Figures]'}<br>
+        • File Size: <strong>${modelDefs[key].size}</strong><br>
+        • Meshes: <strong>${meshes}</strong> | Vertices: <strong>${verts.toLocaleString()}</strong> | Triangles: <strong>${Math.round(tris).toLocaleString()}</strong><br>
+        • Dimensions: Width: <strong>${size.x.toFixed(2)}m</strong>, Height: <strong>${size.y.toFixed(2)}m</strong>, Depth: <strong>${size.z.toFixed(2)}m</strong><br>
+        • Materials: <strong>${mats.size}</strong> (${Array.from(mats).slice(0, 3).join(', ')}${mats.size > 3 ? '...' : ''})<br>
+        • Skeletal Rig: <strong>${gltf.animations.length > 0 ? 'Yes (Rigged & Animated)' : 'None (Static Mesh, No Bones)'}</strong><br>
+        • Animations: <strong>${gltf.animations.length} clips</strong> [${gltf.animations.map(a=>a.name).join(', ')}]
+      `;
+    }
+
+    async function displaySideBySide() {
+      isSideBySide = true;
+      while (currentModelGroup.children.length > 0) {
+        currentModelGroup.remove(currentModelGroup.children[0]);
+      }
+
+      const pbrGltf = await loadModel('pbr');
+      const existGltf = await loadModel('existing');
+
+      const pbrClone = pbrGltf.scene.clone();
+      const existClone = existGltf.scene.clone();
+
+      // PBR on Left (-1.2m)
+      const pbrBox = new THREE.Box3().setFromObject(pbrClone);
+      const pbrCenter = new THREE.Vector3();
+      pbrBox.getCenter(pbrCenter);
+      pbrClone.position.set(-1.2 - pbrCenter.x, -pbrBox.min.y, -pbrCenter.z);
+      currentModelGroup.add(pbrClone);
+
+      // Existing on Right (+1.2m)
+      const existBox = new THREE.Box3().setFromObject(existClone);
+      const existCenter = new THREE.Vector3();
+      existBox.getCenter(existCenter);
+      existClone.position.set(1.2 - existCenter.x, -existBox.min.y, -existCenter.z);
+      currentModelGroup.add(existClone);
+
+      controls.target.set(0, 0.9, 0);
+      camera.position.set(0, 1.3, 3.8);
+      controls.update();
+
+      metaEl.innerHTML = `
+        <strong>Side-by-Side Comparison:</strong><br>
+        • Left: <strong>NEW: base_basic_pbr.glb</strong> (Photorealistic 2K PBR scan, 374k verts, static)<br>
+        • Right: <strong>EXISTING: rudhra.glb</strong> (Game-ready 3.3k verts, 6 skeletal animations, lantern)
+      `;
+    }
+
+    // Lineup isolation toggles
+    document.getElementById('btn-isolate-hero').onclick = () => {
+      isolateHero = true;
+      document.getElementById('btn-isolate-hero').classList.add('active');
+      document.getElementById('btn-all-figures').classList.remove('active');
+      if (activeKey === 'pbr' || activeKey === 'shaded') {
+        displayModel(activeKey);
+      }
+    };
+    document.getElementById('btn-all-figures').onclick = () => {
+      isolateHero = false;
+      document.getElementById('btn-all-figures').classList.add('active');
+      document.getElementById('btn-isolate-hero').classList.remove('active');
+      if (activeKey === 'pbr' || activeKey === 'shaded') {
+        displayModel(activeKey);
+      }
+    };
+
+    // Button Listeners
+    document.getElementById('btn-pbr').onclick = () => {
+      document.querySelectorAll('#ui button').forEach(b=>b.classList.remove('active'));
+      document.getElementById('btn-pbr').classList.add('active');
+      document.getElementById('btn-neutral').classList.add('active');
+      displayModel('pbr');
+    };
+    document.getElementById('btn-shaded').onclick = () => {
+      document.querySelectorAll('#ui button').forEach(b=>b.classList.remove('active'));
+      document.getElementById('btn-shaded').classList.add('active');
+      document.getElementById('btn-neutral').classList.add('active');
+      displayModel('shaded');
+    };
+    document.getElementById('btn-existing').onclick = () => {
+      document.querySelectorAll('#ui button').forEach(b=>b.classList.remove('active'));
+      document.getElementById('btn-existing').classList.add('active');
+      document.getElementById('btn-neutral').classList.add('active');
+      displayModel('existing');
+    };
+    document.getElementById('btn-sidebyside').onclick = () => {
+      document.querySelectorAll('#ui button').forEach(b=>b.classList.remove('active'));
+      document.getElementById('btn-sidebyside').classList.add('active');
+      document.getElementById('btn-neutral').classList.add('active');
+      displaySideBySide();
+    };
+
+    // Lighting toggles
+    document.getElementById('btn-neutral').onclick = () => {
+      document.getElementById('btn-neutral').classList.add('active');
+      document.getElementById('btn-ingame').classList.remove('active');
+      studioLights.visible = true;
+      templeLights.visible = false;
+      scene.background.set(0x161a22);
+    };
+    document.getElementById('btn-ingame').onclick = () => {
+      document.getElementById('btn-ingame').classList.add('active');
+      document.getElementById('btn-neutral').classList.remove('active');
+      studioLights.visible = false;
+      templeLights.visible = true;
+      scene.background.set(0x020408);
+    };
+    document.getElementById('btn-wireframe').onclick = () => {
+      isWireframe = !isWireframe;
+      document.getElementById('btn-wireframe').classList.toggle('active', isWireframe);
+      currentModelGroup.traverse((c) => {
+        if (c.isMesh && c.material) {
+          const mList = Array.isArray(c.material) ? c.material : [c.material];
+          mList.forEach((m) => { m.wireframe = isWireframe; });
+        }
+      });
+    };
+
+    // Camera views: rotate currentModelGroup for robust inspection
+    document.getElementById('v-front').onclick = () => {
+      document.querySelectorAll('#views button').forEach(b=>b.classList.remove('active'));
+      document.getElementById('v-front').classList.add('active');
+      currentModelGroup.rotation.y = 0;
+      controls.reset();
+    };
+    document.getElementById('v-side').onclick = () => {
+      document.querySelectorAll('#views button').forEach(b=>b.classList.remove('active'));
+      document.getElementById('v-side').classList.add('active');
+      currentModelGroup.rotation.y = Math.PI / 2;
+    };
+    document.getElementById('v-back').onclick = () => {
+      document.querySelectorAll('#views button').forEach(b=>b.classList.remove('active'));
+      document.getElementById('v-back').classList.add('active');
+      currentModelGroup.rotation.y = Math.PI;
+    };
+    document.getElementById('v-34').onclick = () => {
+      document.querySelectorAll('#views button').forEach(b=>b.classList.remove('active'));
+      document.getElementById('v-34').classList.add('active');
+      currentModelGroup.rotation.y = -Math.PI / 4;
+    };
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Initial display
+    displayModel('pbr');
+
+    // Render loop
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>

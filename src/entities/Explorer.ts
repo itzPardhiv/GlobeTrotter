@@ -32,6 +32,8 @@ export class Explorer extends Phaser.Physics.Arcade.Sprite {
     d: Phaser.Input.Keyboard.Key;
     w: Phaser.Input.Keyboard.Key;
     s: Phaser.Input.Keyboard.Key;
+    c: Phaser.Input.Keyboard.Key;
+    shift: Phaser.Input.Keyboard.Key;
     space: Phaser.Input.Keyboard.Key;
     shoot: Phaser.Input.Keyboard.Key;
     interact: Phaser.Input.Keyboard.Key;
@@ -65,6 +67,8 @@ export class Explorer extends Phaser.Physics.Arcade.Sprite {
         d: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
         w: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
         s: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+        c: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C),
+        shift: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT),
         space: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
         shoot: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
         interact: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
@@ -160,8 +164,8 @@ export class Explorer extends Phaser.Physics.Arcade.Sprite {
       this.jumpBufferTimer = Math.max(0, this.jumpBufferTimer - clampedDelta);
     }
 
-    // Crouch check
-    const crouchHeld = this.keys.s.isDown || this.keys.down.isDown;
+    // Crouch check (S, Down, or C)
+    const crouchHeld = this.keys.s.isDown || this.keys.down.isDown || (this.keys.c && this.keys.c.isDown);
     this.isCrouching = crouchHeld && onFloor;
 
     if (this.isCrouching) {
@@ -175,10 +179,13 @@ export class Explorer extends Phaser.Physics.Arcade.Sprite {
       this.setOffset(20, 16);
     }
 
+    // Sprint modifier (Shift)
+    const sprintHeld = this.keys.shift && this.keys.shift.isDown;
+    const speed = sprintHeld && onFloor ? Math.round(PLAYER_RUN_SPEED * 1.32) : PLAYER_RUN_SPEED;
+
     // Horizontal Movement
     const moveLeft = this.keys.a.isDown || this.keys.left.isDown;
     const moveRight = this.keys.d.isDown || this.keys.right.isDown;
-    const speed = PLAYER_RUN_SPEED;
 
     if (moveLeft) {
       this.setVelocityX(-speed);

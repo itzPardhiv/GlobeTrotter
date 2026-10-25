@@ -30,6 +30,7 @@ export class ChaseScene extends Phaser.Scene {
   private isJumping: boolean = false;
   private isBoosting: boolean = false;
   private isInvulnerable: boolean = false;
+  private isGameOver: boolean = false;
 
   private dustEmitter?: Phaser.GameObjects.Particles.ParticleEmitter;
   private hudHearts: Phaser.GameObjects.Text[] = [];
@@ -60,6 +61,7 @@ export class ChaseScene extends Phaser.Scene {
     this.isJumping = false;
     this.isBoosting = false;
     this.isInvulnerable = false;
+    this.isGameOver = false;
     this.hasTriggeredClimax = false;
     this.hudHearts = [];
 
@@ -315,6 +317,7 @@ export class ChaseScene extends Phaser.Scene {
   }
 
   private handlePlayerHit() {
+    if (this.hasTriggeredClimax || this.isGameOver) return;
     this.playerHealth--;
     this.isInvulnerable = true;
     audioManager.playHit();
@@ -343,6 +346,8 @@ export class ChaseScene extends Phaser.Scene {
   }
 
   private chaseGameOver() {
+    if (this.isGameOver) return;
+    this.isGameOver = true;
     audioManager.playExplosion();
     this.cameras.main.fadeOut(400, 0, 0, 0);
     this.cameras.main.once('camerafadeoutcomplete', () => {

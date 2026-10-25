@@ -21,9 +21,10 @@ class AudioManager {
   }
 
   public init() {
-    if (this.ctx) return;
+    if (this.ctx || typeof window === 'undefined') return;
     try {
       const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!AudioContextClass) return;
       this.ctx = new AudioContextClass();
 
       this.masterGain = this.ctx.createGain();

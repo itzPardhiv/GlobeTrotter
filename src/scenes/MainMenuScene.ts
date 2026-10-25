@@ -93,7 +93,7 @@ export class MainMenuScene extends Phaser.Scene {
     this.add.image(70, h * 0.52, 'asset_pillar_intact').setTint(0x2a221b).setScale(1.4);
     this.add.image(w - 70, h * 0.52, 'asset_pillar_intact').setTint(0x2a221b).setScale(1.4);
 
-    // Dr. Harrison Vance standing on the left cliff with fedora & lantern
+    // Rudhra standing on the left cliff with long wavy hair & handheld lantern
     const explorerSil = this.add.sprite(w * 0.22, h * 0.64, 'explorer_sheet', 0).setScale(1.7);
     explorerSil.setTint(0x111116);
 
